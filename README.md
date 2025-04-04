@@ -61,7 +61,7 @@
 - **Xcode 프로젝트 변경 사항 버전 관리**
     - `.xcodeproj` 파일을 직접 수정하는 대신 Tuist를 이용해 Git 충돌을 최소화하고 협업을 원활하게 진행할 수 있도록 했습니다.
 -  **기능별 모듈화**
-    - 기능별로 프로젝트를 나눠 테스트 및 TestFlight 업로드를 더욱 더 용이하게 만둘었음.
+    - 기능별로 프로젝트를 나눠 테스트 및 TestFlight 업로드를 더욱 더 용이하게 만들었음.
 
 ### TCA (The Composable Architecture)
 
@@ -976,9 +976,9 @@
 
 ## 6. 신경 쓴 부분
 
-- [접근제한 설정](https://github.com/likelion-project-README/README/wiki/README-6.%EC%8B%A0%EA%B2%BD-%EC%93%B4-%EB%B6%80%EB%B6%84_%EC%A0%91%EA%B7%BC%EC%A0%9C%ED%95%9C-%EC%84%A4%EC%A0%95)
+- [1]()
 
-- [Recoil을 통한 상태관리 및 유지](https://github.com/likelion-project-README/README/wiki/README-6.%EC%8B%A0%EA%B2%BD-%EC%93%B4-%EB%B6%80%EB%B6%84_Recoil%EC%9D%84-%ED%86%B5%ED%95%9C-%EC%83%81%ED%83%9C%EA%B4%80%EB%A6%AC-%EB%B0%8F-%EC%9C%A0%EC%A7%80)
+- [2]()
 
 <br>
 
@@ -1076,8 +1076,10 @@
 <br>
 
 ### [친구 선택 화면]
-- ㅇㅇ
-- 
+- 홈화면에서 [경쟁할 친구 선택하기]를 터치하면 modal형태로 친구 list가 노출되고, 버튼을 누를때 서버와 통신해 친구 한명이라도 있을 경우에 노출되고 한명도 없는 경우에는 `경쟁할 친구가 없어요`라고 Toast가 노출됨.
+- 친구를 선택하여(복수 선택 안됨) 경쟁할 친구를 고름
+- 친구를 고르지 않으면 `[경쟁 요청하기]`버튼이 활성화 되지 않음
+- 친구를 고르면 `[경쟁 요청하기]`버튼이 활성화 되고 웹소켓 `conect`를 요청함.
 
 | 친구 선택 화면 |
 |----------|
@@ -1086,8 +1088,10 @@
 <br>
 
 ### [경쟁 대기 화면]
-- ㅇㅇ
-  
+- RaceOn의 웹소켓 상태는 `Connect`, `SUBSCRIBE`, `SEND`로 나누어짐 웹소켓 상태에 따라 배경 이미지 및 Title, Subtitle가 변경됨
+  - 자세한 내용은 [소켓 통신 설명](#7-1-소켓-통신-설명)에서 다루었으니 참고 바람.
+- WebSocket의 경쟁할 인원 두명이 `Connect -> SUBSCRIBE -> SEND` 했다면 3초뒤에 [경쟁 화면](#경쟁-화면)으로 이동.
+
 | 경쟁 대기 화면 |
 |----------|
 |![splash](https://user-images.githubusercontent.com/112460466/210172920-aef402ed-5aef-4d4a-94b9-2b7147fd8389.gif)|
@@ -1095,7 +1099,14 @@
 <br>
 
 ### [경쟁 화면]
-- ㅇㅇ
+- 해당 화면의 기능은 아래와 같습니다.
+  - 경쟁 거리는 3/5/10km로 나누어지고 두 경쟁자는 일정 시간 마다(3초) WebSocket에 데이터를 전송
+  - 내가 뛴거리, 상대가 뛴거리를 상단에 표시
+  - 실시간으로 내가 뛴거리/상대 뛴거리를 확인 할 수 있음
+  - 내가 뛴거리/상대가 뛴거리를 비교해 그라데이션 배경색 변경
+  - 내가 뛰어온 거리 MapView에 표시
+  - 내 페이스, 뛴 거리, 뛴 시간 표시
+  - 게임 종료(WebSocket Disconnect) 기능 제공
   
 | 경쟁 화면 |
 |----------|
@@ -1104,7 +1115,10 @@
 <br>
 
 ### [경쟁 종료 화면]
-- ㅇㅇ
+- 경쟁이 종료되는 시점의 화면
+- 내 프로필 이미지가 노출되며, **승/패 여부에 따라 배경 Color**도 변경됨.
+- 내가 뛴거리, 평균 페이스를 화면에 노출하고 내가 뛰어온 거리를 MapView에 동선 표시.
+- 상대방의 프로필 이미지, 닉네임, 뛰어온 거리도 화면에 노출
   
 | 경쟁 종료 화면 |
 |----------|
@@ -1112,12 +1126,16 @@
 
 <br>
 
+## 7-1. 소켓 통신 설명
+- [소켓 통신 설명](https://docs.runner-dev.shop/#_프로토콜_설명)
+
+<br>
 
 ## 8. 트러블 슈팅
 
-- [탭메뉴 프로필 버튼 이슈](https://github.com/likelion-project-README/README/wiki/README-8.%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85_%ED%83%AD%EB%A9%94%EB%89%B4-%ED%94%84%EB%A1%9C%ED%95%84-%EB%B2%84%ED%8A%BC-%EC%9D%B4%EC%8A%88)
+- [1]()
 
-- [프로필 수정 이슈](https://github.com/likelion-project-README/README/wiki/README-8.%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85_%ED%94%84%EB%A1%9C%ED%95%84-%EC%88%98%EC%A0%95-%EC%9D%B4%EC%8A%88)
+- [2]()
 
 <br>
 
